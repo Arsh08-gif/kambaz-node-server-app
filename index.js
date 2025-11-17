@@ -33,9 +33,9 @@ app.use(session(sessionOptions));
 
 app.use(express.json());
 
-// app.get('/hello', (req, res) => {res.send('Life is good!')})
-// app.get('/', (req, res) => {
-//   res.send('Welcome to Full Stack Development!')})
+app.get('/hello', (req, res) => {res.send('Life is good!')})
+app.get('/', (req, res) => {
+  res.send('Welcome to Full Stack Development!')})
 UserRoutes(app, db);
 CourseRoutes(app, db);
 ModulesRoutes(app,db)
