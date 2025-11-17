@@ -1,5 +1,5 @@
 import { json } from "stream/consumers";
-import ModulesDao from "./dao";
+import ModulesDao from "./dao.js";
 export default function ModulesRoutes(app, db) {
   const dao = ModulesDao(db);
   const findModulesForCourse = (req, res) => {
