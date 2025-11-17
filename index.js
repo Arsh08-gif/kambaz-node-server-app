@@ -2,7 +2,7 @@ import express from 'express';
 import UserRoutes from "./Users/routes.js";
 import Lab5 from "./Lab5/index.js";
 import cors from "cors";
-import db from "../kanbaz-next-js/app/(Kambaz)/Database/index.js";
+import db from "./Db/index.js";
 import CourseRoutes from "./Courses/routes.js"
 import ModulesRoutes from "./Modules/routes.js"
 import AssignementRoutes from "./Assignments/routes.js"
