@@ -53,7 +53,8 @@ export default function UserRoutes(app, db) {
             res.sendStatus(401);
             return;
         }
-
+        console.log("current user " + currentUser);
+        
         res.json(currentUser);
     };
 

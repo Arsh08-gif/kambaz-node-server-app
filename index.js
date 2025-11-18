@@ -13,7 +13,7 @@ import session from "express-session";
 const app = express()
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL || "http://localhost:3003",
+    origin: process.env.CLIENT_URL || "http://localhost:3001",
 }
 ));
 const sessionOptions = {
@@ -26,7 +26,7 @@ if (process.env.SERVER_ENV !== "development") {
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
-    domain: process.env.SERVER_URL,
+    //domain: process.env.SERVER_URL,
   };
 }
 app.use(session(sessionOptions));

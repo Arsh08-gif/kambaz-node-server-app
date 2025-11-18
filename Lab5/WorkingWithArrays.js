@@ -96,7 +96,7 @@ export default function WorkingWithArrays(app) {
   app.get("/lab5/todos/:id/delete", removeTodo);
   app.get("/lab5/todos", getTodos);
   app.get("/lab5/todos/:id", getTodoById);
-  app.post("/lab5/todos/create", postNewTodo);
+  app.get("/lab5/todos/create", createNewTodo);
   app.post("/lab5/todos", postNewTodo);
   app.delete("/lab5/todos/:id", deleteTodo);
   app.put("/lab5/todos/:id", updateTodo);
