@@ -1,3 +1,5 @@
+import { json } from "express";
+
 let todos = [
   { id: 1, title: "Task 1", description: "first todo", completed: false, editing: false },
   { id: 2, title: "Task 2", description: "second todo", completed: true, editing: false },
@@ -17,17 +19,18 @@ export default function WorkingWithArrays(app) {
     res.json(todos);
   };
   const createNewTodo = (req, res) => {
-    // const newTodo = {
-    //   // id: new Date().getTime(),
-    //   id: nextId++,
-    //   title: "New Task",
-    //   completed: false,
-    // };
-    // todos.push(newTodo);
-    // res.json(todos);
-    const newTodo = { ...req.body, id: new Date().getTime() };
+    const newTodo = {
+      id: new Date().getTime(),
+      //id: nextId++,
+      title: "New Task",
+      completed: false,
+    };
     todos.push(newTodo);
-    res.json(newTodo);
+    console.log(JSON.stringify(todos));
+    res.json(todos);
+    // const newTodo = { ...req.body, id: new Date().getTime() };
+    // todos.push(newTodo);
+    // res.json(newTodo);
   };
 
   const postNewTodo = (req, res) => {
@@ -95,8 +98,8 @@ export default function WorkingWithArrays(app) {
   app.get("/lab5/todos/:id/completed/:completed", updateTodoCompleted);
   app.get("/lab5/todos/:id/delete", removeTodo);
   app.get("/lab5/todos", getTodos);
-  app.get("/lab5/todos/:id", getTodoById);
   app.get("/lab5/todos/create", createNewTodo);
+  app.get("/lab5/todos/:id", getTodoById);
   app.post("/lab5/todos", postNewTodo);
   app.delete("/lab5/todos/:id", deleteTodo);
   app.put("/lab5/todos/:id", updateTodo);
