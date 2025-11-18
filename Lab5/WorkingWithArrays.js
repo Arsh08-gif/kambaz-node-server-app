@@ -27,7 +27,8 @@ export default function WorkingWithArrays(app) {
     // res.json(todos);
     const newTodo = { ...req.body, id: new Date().getTime() };
     todos.push(newTodo);
-    res.json(newTodo);
+    //res.json(newTodo);
+    res.redirect("/lab5/todos");
   };
 
   const postNewTodo = (req, res) => {
