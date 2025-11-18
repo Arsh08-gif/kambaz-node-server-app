@@ -27,8 +27,7 @@ export default function WorkingWithArrays(app) {
     // res.json(todos);
     const newTodo = { ...req.body, id: new Date().getTime() };
     todos.push(newTodo);
-    //res.json(newTodo);
-    res.redirect("/lab5/todos");
+    res.json(newTodo);
   };
 
   const postNewTodo = (req, res) => {
@@ -97,7 +96,7 @@ export default function WorkingWithArrays(app) {
   app.get("/lab5/todos/:id/delete", removeTodo);
   app.get("/lab5/todos", getTodos);
   app.get("/lab5/todos/:id", getTodoById);
-  app.get("/lab5/todos/create", createNewTodo);
+  app.post("/lab5/todos/create", createNewTodo);
   app.post("/lab5/todos", postNewTodo);
   app.delete("/lab5/todos/:id", deleteTodo);
   app.put("/lab5/todos/:id", updateTodo);
