@@ -3,6 +3,8 @@ console.log("Inside user router");
 import UsersDao from "./dao.js";
 //let currentUser = null;
 export default function UserRoutes(app, db) {
+    console.log("database inside userRoutes " + JSON.stringify(db.users));
+
     const dao = UsersDao(db);
     const createUser = (req, res) => { };
     const deleteUser = (req, res) => { };
@@ -17,9 +19,16 @@ export default function UserRoutes(app, db) {
         res.json(currentUser);
     };
     const signup = (req, res) => {
-        const user = dao.findUserByUsername(req.body.username);
-        console.log(user);
+        const { username, password } = req.body;
+        if (!username || username.trim() === "") {
+            return res.status(400).json({ message: "Username is required" });
+        }
 
+        if (!password || password.trim() === "") {
+            return res.status(400).json({ message: "Password is required" });
+        }
+        const user = dao.findUserByUsername(req.body.username);
+        console.log("sigup user : " + JSON.stringify(user));
         if (user) {
             res.status(400).json(
                 { message: "Username already in use" });
@@ -32,13 +41,18 @@ export default function UserRoutes(app, db) {
     };
     const signin = (req, res) => {
         const { username, password } = req.body;
+        console.log("sign-in username " + username);
+        console.log("sign-in password " + password);
         const currentUser = dao.findUserByCredentials(username, password);
-        if (currentUser) {
-            req.session["currentUser"] = currentUser;
-            res.json(currentUser);
-        } else {
-            res.status(401).json({ message: "Unable to login. Try again later." });
-        }
+        console.log("signin user " + currentUser);
+        req.session["currentUser"] = currentUser;
+        res.json(currentUser);
+        // if (currentUser) {
+        //     req.session["currentUser"] = currentUser;
+        //     res.json(currentUser);
+        // } else {
+        //     res.status(401).json({ message: "Unable to login. Try again later." });
+        // }
 
     };
     const signout = (req, res) => {
@@ -54,7 +68,7 @@ export default function UserRoutes(app, db) {
             return;
         }
         console.log("current user " + currentUser);
-        
+
         res.json(currentUser);
     };
 

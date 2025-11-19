@@ -2,53 +2,65 @@ console.log("inside course router");
 
 import CoursesDao from "./dao.js";
 import EnrollmentsDao from "../Enrollments/dao.js";
+import { json, response } from "express";
 export default function CourseRoutes(app, db) {
     const dao = CoursesDao(db);
     const enrollmentsDao = EnrollmentsDao(db);
     const findAllCourses = (req, res) => {
         const courses = dao.findAllCourses();
-        res.send(courses);
-    }
-    const findCoursesForEnrolledUser = (req, res) => {
-        let { userId } = req.params;
-        console.log("Route hit! userId:", req.params.userId);
-        if (userId === "current") {
-            const currentUser = req.session["currentUser"];
-            console.log("find courses for enrolled user " + currentUser);
-
-            if (!currentUser) {
-                res.sendStatus(401);
-                return;
-            }
-            userId = currentUser._id;
-        }
-        const courses = dao.findCoursesForEnrolledUser(userId);
         res.json(courses);
-    };
+    }
+    // const findCoursesForEnrolledUser = (req, res) => {
+    //     let { userId } = req.params;
+    //     console.log("Route hit! userId:", req.params.userId);
+    //     if (userId === "current") {
+    //         const currentUser = req.session["currentUser"];
+    //         console.log("find courses for enrolled user " + currentUser);
+
+    //         if (!currentUser) {
+    //             res.sendStatus(401);
+    //             return;
+    //         }
+    //         userId = currentUser._id;
+    //     }
+    //     const courses = dao.findCoursesForEnrolledUser(userId);
+    //     res.json(courses);
+    // };
     const enrollUser = (req, res) => {
         let { userId, courseId } = req.params;
+        const existing = enrollmentsDao.findEnrollment(userId, courseId);
+        console.log("existing enrollment " + JSON.stringify(existing));
+
+        if (existing) {
+            return res.status(400).json({ message: "Already enrolled" });
+        }
         const status = enrollmentsDao.enrollUserInCourse(userId, courseId);
-        console.log("enrol status " + status);
+        console.log("enrol status " + JSON.stringify(status));
         res.json(status)
     };
     const unenrollUser = (req, res) => {
         let { userId, courseId } = req.params;
         const userEnrollments = enrollmentsDao.unenrollUserFromCourse(userId, courseId);
-        console.log("unenrol status " + userEnrollments);
+        console.log("unenrol status " + JSON.stringify(userEnrollments));
         res.json(userEnrollments);
+        //res.sendStatus(200);
     };
     const getUserEnrollments = (req, res) => {
         const { userId } = req.params;
         const enrollments = enrollmentsDao.findEnrollmentsForUser(userId);
-        console.log("user enrollements " + enrollments);
-        
+        console.log("user enrollements " + JSON.stringify(enrollments));
+
         res.json(enrollments);
     };
     const createCourse = (req, res) => {
         const currentUser = req.session["currentUser"];
         const newCourse = dao.createCourse(req.body);
-        enrollmentsDao.enrollUserInCourse(currentUser._id, newCourse._id);
-        res.json(newCourse);
+        const newEnrollment = enrollmentsDao.enrollUserInCourse(currentUser._id, newCourse._id);
+        //res.json(newCourse);
+        res.json({
+            course: newCourse,
+            enrollment: newEnrollment
+        });
     };
     const deleteCourse = (req, res) => {
         const { courseId } = req.params;
@@ -61,14 +73,22 @@ export default function CourseRoutes(app, db) {
         const status = dao.updateCourse(courseId, courseUpdates);
         res.send(status);
     }
+    const findCourseById = (req, res) => {
+        const { ids } = req.body;
+        const results = db.courses.filter(c => ids.includes(c._id));
+        console.log("course id results " + JSON.stringify(results));
 
-    app.get("/api/users/:userId/enrollments",getUserEnrollments);
+        res.json(results);
+    }
+
+    app.get("/api/users/:userId/enrollments", getUserEnrollments);
     app.delete("/api/courses/:userId/:courseId/enrollments", unenrollUser);
     app.post("/api/courses/:userId/:courseId/enrollments", enrollUser);
     app.put("/api/courses/:courseId", updateCourse);
     app.delete("/api/courses/:courseId", deleteCourse);
-    app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
+    //app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
     app.get("/api/courses", findAllCourses);
     app.post("/api/users/current/courses", createCourse);
+    app.post("/api/courses/batch", findCourseById)
 }
 
