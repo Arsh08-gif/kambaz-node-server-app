@@ -24,7 +24,26 @@ mongoose.connection.on('error', (err) => {
 const app = express()
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL || "http://localhost:3001",
+    //origin: process.env.CLIENT_URL || "http://localhost:3001",
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        
+        const allowedOrigins = [
+            process.env.CLIENT_URL,
+            'http://localhost:3001',
+        ];
+        
+        // Check if the origin starts with any allowed origin (handles query params)
+        const isAllowed = allowedOrigins.some(allowedOrigin => 
+            origin.startsWith(allowedOrigin)
+        );
+        
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }
 ));
 const sessionOptions = {
