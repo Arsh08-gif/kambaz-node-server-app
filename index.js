@@ -13,6 +13,14 @@ import session from "express-session";
 const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://localhost:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
 
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
 const app = express()
 app.use(cors({
     credentials: true,
