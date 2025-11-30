@@ -14,7 +14,10 @@ export default function EnrollmentsDao() {
     async function findUsersForCourse(courseId) {
         const enrollments = await model.find({ course: courseId }).populate("user");
         console.log("user enrollments " + enrollments);
-        const enrolledUsers = enrollments.map((enrollment) => enrollment.user);
+        //const enrolledUsers = enrollments.map((enrollment) => enrollment.user);
+        const enrolledUsers = enrollments
+            .map((enrollment) => enrollment.user)
+            .filter((user) => user !== null);
         console.log("enrolled users " + enrolledUsers);
         return enrolledUsers;
     }
