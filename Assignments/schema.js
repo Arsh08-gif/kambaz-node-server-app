@@ -7,9 +7,9 @@ const assignmentSchema = new mongoose.Schema(
     course: { type: String, ref: "CourseModel" },
     description: String,
     points: { type: Number, default: 100 },
-    available_date: String,
-    due_date: String,
-    until: String
+    available_date: Date,
+    due_date: Date,
+    until: Date
   },
   { collection: "assignments" }
 );

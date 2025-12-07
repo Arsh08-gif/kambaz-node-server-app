@@ -7,8 +7,11 @@ import db from "./Database/index.js";
 import CourseRoutes from "./Courses/routes.js"
 import ModulesRoutes from "./Modules/routes.js"
 import AssignementRoutes from "./Assignments/routes.js"
+import QuizzesRoutes from "./Quizzes/routes.js"
+import QuestionRoutes from "./Questions/routes.js"
 import "dotenv/config";
 import session from "express-session";
+import QuizAttemptRoutes from './QuizAttempt/route.js';
 
 const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://localhost:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
@@ -49,8 +52,11 @@ app.get('/', (req, res) => {
   res.send('Welcome to Full Stack Development!')})
 UserRoutes(app, db);
 CourseRoutes(app, db);
-ModulesRoutes(app,db)
-AssignementRoutes(app,db)
+ModulesRoutes(app,db);
+AssignementRoutes(app,db);
+QuizzesRoutes(app);
+QuestionRoutes(app);
+QuizAttemptRoutes(app)
 Lab5(app);
 // Hello(app)
 app.listen(process.env.PORT || 4000)
